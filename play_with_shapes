@@ -1,0 +1,128 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Shape
+{
+public:
+    int len,width;
+    int base;
+
+    int perim()
+    {
+        if (width)
+            return (len + width) * 2;
+        else
+            return len * 4;
+    }
+    int ariaRectangle()
+    {
+        if (width)
+            return len * width;
+        else
+            return len * 2;
+    }
+    int perimTriangle()
+    {
+        return len + width + base;
+    }
+    int heigth(int len, int width);
+    
+    int ariaTriangle()
+    {
+        return (base * heigth(len,width)) / 2;
+    }
+};
+
+int Shape::heigth(int len, int width)
+{
+        return (len * width) / 2;
+}
+
+int main()
+{
+    Shape square, rectangle, triangle;
+
+
+    cout << "Pick a shape: " << endl;
+    string shapeName;
+    getline(cin, shapeName);
+
+
+    while (shapeName != "square" && shapeName != "rectangle" && shapeName != "triangle")
+    {
+        cout << "ERROR: Enter a valid shape!" << endl;
+        cout << "Pick a shape: " << endl;
+        getline(cin, shapeName);
+    }
+    if (shapeName == "square")
+    {
+        cout << "Enter size of side" << endl;
+        cin >> square.len;
+    }
+    if (shapeName == "rectangle")
+    {
+        cout << "Enter length" << endl;
+        cin >> rectangle.len;
+        cout << "Enter width" << endl;
+        cin >> rectangle.width;
+    }
+    if (shapeName == "triangle")
+    {
+        cout << "Enter first side" << endl;
+        cin >> triangle.len;
+        cout << "Enter second side" << endl;
+        cin >> triangle.width;
+        cout << "Enter base" << endl;
+        cin >> triangle.base;
+        //int triHeight = triangle.height();
+    }
+
+
+
+    cout << "What operation you desire?" << endl;
+    string operation;
+    getline(cin, operation);
+
+    while (operation != "area" && operation != "perimeter" && operation != "height")
+    {
+        cout << "ERROR: Enter a valid operation!" << endl;
+        cout << "What operation you desire?" << endl;
+        getline(cin, operation);
+    }
+    if (operation == "area")
+    {
+        if (shapeName == "square")
+            cout << "Square area is: " << square.ariaRectangle() << endl;
+        if (shapeName == "rectangle")
+            cout << "Rectangle area is: " << rectangle.ariaRectangle() << endl;
+        if (shapeName == "triangle")
+            cout << "Triangle area is: " << triangle.ariaTriangle() << endl;
+    }
+    if (operation == "periemeter")
+    {
+            if (shapeName == "square")
+                cout << "Square area is: " << square.perim() << endl;
+            if (shapeName == "rectangle")
+                cout << "Rectangle area is: " << rectangle.perim() << endl;
+            if (shapeName == "triangle")
+                cout << "Triangle area is: " << triangle.perimTriangle() << endl;
+    }
+        if (shapeName == "triangle" && operation == "heigth")
+            cout << "Heigth of the triangle is: " << triangle.heigth(triangle.len,triangle.width) << endl;
+
+}
+
+/* square.len = 8;
+    rectangle.len = 10;
+    rectangle.width = 5;
+    triangle.len = 4;
+    triangle.width = 5;
+    triangle.base = 6;
+    triangle.height();
+
+    cout << square.perim() << endl;
+    cout << rectangle.ariaRectangle() << endl;
+    cout << triangle.perimTriangle() << endl;
+    cout << triangle.ariaTriangle() << endl;
+    */
