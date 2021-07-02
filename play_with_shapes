@@ -5,49 +5,60 @@ using namespace std;
 class Shape
 {
 public:
-    int len,width;
-    int base;
+    virtual int perim() = 0;  //pure virtual function ("=0")
+    virtual double aria() = 0; 
+};
 
+
+class Rectangle : Shape
+{
+public:
+    int len, width;
     int perim()
     {
-        if (width)
-            return (len + width) * 2;
-        else
-            return len * 4;
+        return (len + width) * 2;
     }
-    int ariaRectangle()
+    double aria()
     {
-        if (width)
-            return len * width;
-        else
-            return len * 2;
-    }
-    int perimTriangle()
-    {
-        return len + width + base;
-    }
-    int heigth(int len, int width);
-    
-    int ariaTriangle()
-    {
-        return (base * heigth(len,width)) / 2;
+        return len * width;
     }
 };
 
-int Shape::heigth(int len, int width)
+class Triangle : Shape
 {
-        return (len * width) / 2;
-}
+public:
+    int a, b, c; //cele 3 laturi
+    int perim()
+    {
+        return a + b + c;
+    }
+    double aria()
+    {
+        int p = perim() / 2;
+        return sqrt(p * (p - a) * (p - b) * (p - c));
+    }
+    double height_c()
+    {
+        return 2 * aria() / c;  //din scrierea ariei in 2 moduri
+    }
+};
+
+
+
 
 int main()
 {
-    Shape square, rectangle, triangle;
+    
+    //Shape square, rectangle, triangle;
+    Shape* shape = NULL;
+    
 
 
     cout << "Pick a shape: " << endl;
     string shapeName;
     getline(cin, shapeName);
-
+    //cin.ignore(80, '\n');
+    //getchar(); //'\n'
 
     while (shapeName != "square" && shapeName != "rectangle" && shapeName != "triangle")
     {
@@ -55,31 +66,35 @@ int main()
         cout << "Pick a shape: " << endl;
         getline(cin, shapeName);
     }
+    /*
     if (shapeName == "square")
     {
         cout << "Enter size of side" << endl;
         cin >> square.len;
-    }
+    }*/
     if (shapeName == "rectangle")
     {
+        Rectangle* rectangle = new Rectangle();
         cout << "Enter length" << endl;
-        cin >> rectangle.len;
+        cin >> rectangle->len;
         cout << "Enter width" << endl;
-        cin >> rectangle.width;
+        cin >> rectangle->width;
+        shape = (Shape*)rectangle;
     }
-    if (shapeName == "triangle")
+    else if (shapeName == "triangle")
     {
+        Triangle* triangle = new Triangle();
         cout << "Enter first side" << endl;
-        cin >> triangle.len;
+        cin >> triangle->a;
         cout << "Enter second side" << endl;
-        cin >> triangle.width;
-        cout << "Enter base" << endl;
-        cin >> triangle.base;
-        //int triHeight = triangle.height();
+        cin >> triangle->b;
+        cout << "Enter third side" << endl;
+        cin >> triangle->c;
+        shape = (Shape*)triangle;
     }
 
 
-
+    cin.ignore(80, '\n'); //flush resturi (Enter-ul) din input stream
     cout << "What operation you desire?" << endl;
     string operation;
     getline(cin, operation);
@@ -90,39 +105,22 @@ int main()
         cout << "What operation you desire?" << endl;
         getline(cin, operation);
     }
+
     if (operation == "area")
     {
-        if (shapeName == "square")
-            cout << "Square area is: " << square.ariaRectangle() << endl;
-        if (shapeName == "rectangle")
-            cout << "Rectangle area is: " << rectangle.ariaRectangle() << endl;
-        if (shapeName == "triangle")
-            cout << "Triangle area is: " << triangle.ariaTriangle() << endl;
+        cout << "Area is: " << shape->aria() << endl;
     }
-    if (operation == "periemeter")
+    else if (operation == "periemeter")
     {
-            if (shapeName == "square")
-                cout << "Square area is: " << square.perim() << endl;
-            if (shapeName == "rectangle")
-                cout << "Rectangle area is: " << rectangle.perim() << endl;
-            if (shapeName == "triangle")
-                cout << "Triangle area is: " << triangle.perimTriangle() << endl;
+        cout << "Perimeter is: " << shape->perim() << endl;
     }
-        if (shapeName == "triangle" && operation == "heigth")
-            cout << "Heigth of the triangle is: " << triangle.heigth(triangle.len,triangle.width) << endl;
-
+    
+    //particularizare (cast la obiect concret) - DE EVITAT in designul claselor/programului 
+    else if (shapeName == "triangle" && operation == "height")
+    {
+        Triangle* triangle = (Triangle*)shape;
+        cout << "Heigth of the triangle is: " << triangle->height_c() << endl;
+    }
+  
+    delete shape;
 }
-
-/* square.len = 8;
-    rectangle.len = 10;
-    rectangle.width = 5;
-    triangle.len = 4;
-    triangle.width = 5;
-    triangle.base = 6;
-    triangle.height();
-
-    cout << square.perim() << endl;
-    cout << rectangle.ariaRectangle() << endl;
-    cout << triangle.perimTriangle() << endl;
-    cout << triangle.ariaTriangle() << endl;
-    */
