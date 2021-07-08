@@ -5,16 +5,35 @@ using namespace std;
 class Shape
 {
 public:
-    virtual int perim() = 0;  //pure virtual function ("=0")
-    virtual double aria() = 0; 
+    virtual double perim() = 0;  //pure virtual function ("=0")
+    virtual double aria() = 0;
 };
 
 
+class Square : Rectangle   
+{
+private:
+    double lat;
+public:
+    Square(double lat)
+    {
+        //double len, width;
+        this->lat = lat;
+        len = width = lat;  //de modificat odata cu "lat" oriunde in clasa Square
+    }
+};
+
 class Rectangle : Shape
 {
+protected:          
+    double len, width;
 public:
-    int len, width;
-    int perim()
+    Rectangle(double len, double width)
+    {
+        this->len = len;
+        this->width = width;
+    }
+    double perim()
     {
         return (len + width) * 2;
     }
@@ -26,15 +45,22 @@ public:
 
 class Triangle : Shape
 {
+private:
+    double a, b, c;
 public:
-    int a, b, c; //cele 3 laturi
-    int perim()
+    Triangle(double a, double b, double c)
+    {
+        this->a = a;
+        this->b = b;
+        this->c = c;
+    }
+    double perim()
     {
         return a + b + c;
     }
     double aria()
     {
-        int p = perim() / 2;
+        double p = perim() / 2;
         return sqrt(p * (p - a) * (p - b) * (p - c));
     }
     double height_c()
@@ -48,79 +74,104 @@ public:
 
 int main()
 {
-    
+    //const char output[4] = { "zero","square","rectangle","triangle" };
     //Shape square, rectangle, triangle;
     Shape* shape = NULL;
-    
 
 
-    cout << "Pick a shape: " << endl;
-    string shapeName;
-    getline(cin, shapeName);
-    //cin.ignore(80, '\n');
-    //getchar(); //'\n'
 
-    while (shapeName != "square" && shapeName != "rectangle" && shapeName != "triangle")
+    std::cout << "Pick a shape: \n";
+    std::cout << "1. Square\n";
+    std::cout << "2. Rectangle\n";
+    std::cout << "3. Triangle\n" <<flush;
+    string shapeChoice;
+    getline(std::cin, shapeChoice);
+  
+
+    while (shapeChoice != "1" && shapeChoice != "2" && shapeChoice != "3")
     {
-        cout << "ERROR: Enter a valid shape!" << endl;
-        cout << "Pick a shape: " << endl;
-        getline(cin, shapeName);
+        system("CLS");
+        std::cout << "ERROR: Pick a valid shape!\n";
+        std::cout << "Pick a shape: " << endl;
+        std::cout << "1. Square\n";
+        std::cout << "2. Rectangle\n";
+        std::cout << "3. Triangle\n"<< flush;
+        getline(cin, shapeChoice);
     }
-    /*
-    if (shapeName == "square")
+
+    if (shapeChoice == "1")
     {
-        cout << "Enter size of side" << endl;
-        cin >> square.len;
-    }*/
-    if (shapeName == "rectangle")
+        double lat;
+        std::cout << "Enter size of side:\n";
+        std::cin >> lat;
+        Square* square = new Square(lat);
+        shape = (Shape*)square;
+
+    }
+    if (shapeChoice == "2")
     {
-        Rectangle* rectangle = new Rectangle();
-        cout << "Enter length" << endl;
-        cin >> rectangle->len;
-        cout << "Enter width" << endl;
-        cin >> rectangle->width;
+        double len, width;
+        std::cout << "Enter length\n";
+        std::cin >> len;
+        std::cout << "Enter width\n";
+        std::cin >> width;
+        Rectangle* rectangle = new Rectangle(len, width);
         shape = (Shape*)rectangle;
     }
-    else if (shapeName == "triangle")
+    else if (shapeChoice == "3")
     {
-        Triangle* triangle = new Triangle();
-        cout << "Enter first side" << endl;
-        cin >> triangle->a;
-        cout << "Enter second side" << endl;
-        cin >> triangle->b;
-        cout << "Enter third side" << endl;
-        cin >> triangle->c;
+        double a, b, c;
+       std::cout << "Enter first side\n";
+      std::cin >> a;
+        std::cout << "Enter second side\n";
+        std::cin >> b;
+        std::cout << "Enter third side\n";
+        std::cin >> c;
+        Triangle* triangle = new Triangle(a,b,c);
         shape = (Shape*)triangle;
     }
 
-
-    cin.ignore(80, '\n'); //flush resturi (Enter-ul) din input stream
-    cout << "What operation you desire?" << endl;
-    string operation;
-    getline(cin, operation);
-
-    while (operation != "area" && operation != "perimeter" && operation != "height")
-    {
-        cout << "ERROR: Enter a valid operation!" << endl;
-        cout << "What operation you desire?" << endl;
-        getline(cin, operation);
-    }
-
-    if (operation == "area")
-    {
-        cout << "Area is: " << shape->aria() << endl;
-    }
-    else if (operation == "periemeter")
-    {
-        cout << "Perimeter is: " << shape->perim() << endl;
-    }
     
-    //particularizare (cast la obiect concret) - DE EVITAT in designul claselor/programului 
-    else if (shapeName == "triangle" && operation == "height")
+        std::cin.ignore(80, '\n'); 
+        system("CLS");
+        std::cout << "What operation you desire?\n";
+        std::cout << "1. Area\n";
+        std::cout << "2. Perimeter\n" << flush;
+        if (shapeChoice=="3")
+        std::cout << "3. Height\n" << flush;
+        string operation;
+        getline(std::cin, operation);
+    
+
+    while (operation != "1" && operation != "2" && operation != "3")
     {
-        Triangle* triangle = (Triangle*)shape;
-        cout << "Heigth of the triangle is: " << triangle->height_c() << endl;
+        system("CLS");
+        std::cout << "ERROR: Enter a valid option!\n";
+        std::cout << "What operation you desire?\n";
+        std::cout << "1. Area\n";
+        std::cout << "2. Perimeter\n";
+        if (shapeChoice == "3")
+        std::cout << "3. Height\n" <<flush;
+        getline(std::cin, operation);
     }
-  
+
+    if (operation == "1")
+    {
+        system("CLS");
+        std::cout << "Area is: " << shape->aria() << endl;
+    }
+    else if (operation == "2")
+    {
+        system("CLS");
+        std::cout << "Perimeter is "<< shape->perim() << endl;
+    }
+
+    else if (shapeChoice == "3" && operation == "3")
+    {
+        system("CLS");
+        Triangle* triangle = (Triangle*)shape;
+        std::cout << "Heigth of the triangle is: " << triangle->height_c() << endl;
+    }
+
     delete shape;
 }
