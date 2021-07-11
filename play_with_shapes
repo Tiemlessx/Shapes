@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-using namespace std;
 
+static const float pi = 3.14;
 class Shape
 {
 public:
@@ -9,8 +9,31 @@ public:
     virtual double aria() = 0;
 };
 
+class Circle : Shape
+{
+private:
+    double radius;
+public:
+    Circle(double radius)
+    {
+        this->radius = radius;
+    }
+    double diameter()
+    {
+        return radius * 2;
+    }
+    double aria()
+    {
+        return pi * pow(radius, 2);
+    }
+    double perim()
+    {
+        return 2 * pi * radius;
+    }
 
-class Square : Rectangle   
+};
+
+class Square : Shape
 {
 private:
     double lat;
@@ -19,13 +42,20 @@ public:
     {
         //double len, width;
         this->lat = lat;
-        len = width = lat;  //de modificat odata cu "lat" oriunde in clasa Square
+    }
+    double perim()
+    {
+        return lat * 4;
+    }
+    double aria()
+    {
+        return lat * 2;
     }
 };
 
 class Rectangle : Shape
 {
-protected:          
+protected:
     double len, width;
 public:
     Rectangle(double len, double width)
@@ -83,20 +113,22 @@ int main()
     std::cout << "Pick a shape: \n";
     std::cout << "1. Square\n";
     std::cout << "2. Rectangle\n";
-    std::cout << "3. Triangle\n" <<flush;
-    string shapeChoice;
-    getline(std::cin, shapeChoice);
-  
+    std::cout << "3. Triangle\n";
+    std::cout << "4. Circle\n" << std::flush;
+    std::string shapeChoice;
+    std::getline(std::cin, shapeChoice);
 
-    while (shapeChoice != "1" && shapeChoice != "2" && shapeChoice != "3")
+
+    while (shapeChoice != "1" && shapeChoice != "2" && shapeChoice != "3"&& shapeChoice!="4")
     {
         system("CLS");
         std::cout << "ERROR: Pick a valid shape!\n";
-        std::cout << "Pick a shape: " << endl;
+        std::cout << "Pick a shape: " << std::endl;
         std::cout << "1. Square\n";
         std::cout << "2. Rectangle\n";
-        std::cout << "3. Triangle\n"<< flush;
-        getline(cin, shapeChoice);
+        std::cout << "3. Triangle\n";
+        std::cout << "4. Circle\n" << std::flush;
+        std::getline(std::cin, shapeChoice);
     }
 
     if (shapeChoice == "1")
@@ -104,6 +136,13 @@ int main()
         double lat;
         std::cout << "Enter size of side:\n";
         std::cin >> lat;
+        while (lat <= 0)
+        {
+            system("CLS");
+            std::cout << "Error: Size is negative.\n";
+            std::cout << "Enter size of side:\n";
+            std::cin >> lat;
+        }
         Square* square = new Square(lat);
         shape = (Shape*)square;
 
@@ -115,33 +154,70 @@ int main()
         std::cin >> len;
         std::cout << "Enter width\n";
         std::cin >> width;
+        while (len <= 0 || width <= 0)
+        {
+            system("CLS");
+            std::cout << "Error: One side is negative.\n";
+            std::cout << "Enter length\n";
+            std::cin >> len;
+            std::cout << "Enter width\n";
+            std::cin >> width;
+        }
         Rectangle* rectangle = new Rectangle(len, width);
         shape = (Shape*)rectangle;
     }
-    else if (shapeChoice == "3")
+    if (shapeChoice == "3")
     {
-        double a, b, c;
-       std::cout << "Enter first side\n";
-      std::cin >> a;
+        double adjacent, opposite, hypotenuse;
+        std::cout << "Enter first side\n";
+        std::cin >> adjacent;
         std::cout << "Enter second side\n";
-        std::cin >> b;
+        std::cin >> opposite;
         std::cout << "Enter third side\n";
-        std::cin >> c;
-        Triangle* triangle = new Triangle(a,b,c);
+        std::cin >> hypotenuse;
+        while (adjacent <= 0 || opposite <= 0 || hypotenuse <= 0)
+        {
+            system("CLS");
+            std::cout << "Error: One side is negative.\n";
+            std::cout<< "Enter first side\n";
+            std::cin >> adjacent;
+            std::cout << "Enter second side\n";
+            std::cin >> opposite;
+            std::cout << "Enter third side\n";
+            std::cin >> hypotenuse;
+        }
+        Triangle* triangle = new Triangle(adjacent, opposite, hypotenuse);
         shape = (Shape*)triangle;
     }
+    else if (shapeChoice == "4")
+    {
+        double radius;
+        std::cout << "Enter radius\n";
+        std::cin >> radius;
+        while (radius <= 0)
+        {
+            system("CLS");
+            std::cout << "Error: Size is negative.\n";
+            std::cout << "Enter radius\n";
+            std::cin >> radius;
+        }
+        Circle* circle = new Circle(radius);
+        shape = (Shape*)circle;
+    }
 
-    
-        std::cin.ignore(80, '\n'); 
-        system("CLS");
-        std::cout << "What operation you desire?\n";
-        std::cout << "1. Area\n";
-        std::cout << "2. Perimeter\n" << flush;
-        if (shapeChoice=="3")
-        std::cout << "3. Height\n" << flush;
-        string operation;
-        getline(std::cin, operation);
-    
+
+    std::cin.ignore(80, '\n');
+    system("CLS");
+    std::cout << "What operation you desire?\n";
+    std::cout << "1. Area\n";
+    std::cout << "2. Perimeter\n";
+    if (shapeChoice == "3")
+        std::cout << "3. Height\n" << std::flush;
+    else if (shapeChoice == "4")
+        std::cout << "3. Diameter\n"<<std::flush;
+    std::string operation;
+    std::getline(std::cin, operation);
+
 
     while (operation != "1" && operation != "2" && operation != "3")
     {
@@ -151,27 +227,36 @@ int main()
         std::cout << "1. Area\n";
         std::cout << "2. Perimeter\n";
         if (shapeChoice == "3")
-        std::cout << "3. Height\n" <<flush;
+            std::cout << "3. Height\n" << std::flush;
+        else if (shapeChoice == "4")
+            std::cout << "3. Diameter\n" << std::flush;
         getline(std::cin, operation);
     }
 
     if (operation == "1")
     {
         system("CLS");
-        std::cout << "Area is: " << shape->aria() << endl;
+        std::cout << "Area is: " << shape->aria() << std::endl;
     }
     else if (operation == "2")
     {
         system("CLS");
-        std::cout << "Perimeter is "<< shape->perim() << endl;
+        std::cout << "Perimeter is " << shape->perim() << std::endl;
     }
 
     else if (shapeChoice == "3" && operation == "3")
     {
         system("CLS");
         Triangle* triangle = (Triangle*)shape;
-        std::cout << "Heigth of the triangle is: " << triangle->height_c() << endl;
+        std::cout << "Heigth of the triangle is: " << triangle->height_c() << std::endl;
     }
+    else if (shapeChoice == "4" && operation == "3")
+    {
+        system("CLS");
+        Circle* circle = (Circle*)shape;
+        std::cout << "Diameter of circle is: " << circle->diameter() << std::endl;
+    }
+       
 
     delete shape;
 }
